@@ -7,8 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
-import java.io.FileWriter;
-import java.io.IOException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -17,8 +15,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-
-import com.google.gson.Gson;
 
 
 public class MapGen {
@@ -116,30 +112,10 @@ public class MapGen {
 		return rtn;
 	}
 
-	public void saveToFile() {
-		Gson gson = new Gson();
-
-		try (FileWriter writer = new FileWriter("savedMap.json")){
-			gson.toJson(map.values(), writer);
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	static enum Prop {
-		HOUSE, STRUCTURE, TREE, FOUNTAIN, EMPTY
+	public List<OpenMapSpace> getMapSpaceAsList() {
+		return new ArrayList(map.values());
 	}
 
 	record Coordinate(int x, int y, int z){};//temporary representation of a coordinate, used to save x and y together
 
-	@Getter
-	@AllArgsConstructor
-	static class OpenMapSpace {
-		TerrainType terrainType;
-		int x;
-		int y;
-		int z;
-	}
-
 }
-

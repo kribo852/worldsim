@@ -1,7 +1,6 @@
 package worldsim.app;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -29,11 +28,14 @@ import lombok.AllArgsConstructor;
 
 public class App {
 
-    static MapGen mapGen = new MapGen();
-    static final ColorHandler colorHandler = new ColorHandler();
     static final int TILE_SIZE = 20;
 
-    public static void main(String[] args) {
+    static final MapGen mapGen = new MapGen();
+    static final Environment env = new Environment();
+    static final ColorHandler colorHandler = new ColorHandler();
+    static final MapSaver mapsaver = new JsonMapSaver();
+
+    public static void main(String[] args) throws IOException {
 
         Camera camera = new Camera();
         JFrame jframe = new JFrame();
@@ -56,12 +58,15 @@ public class App {
             entry(KeyEvent.VK_A, () -> camera.moveCursor(-1, 0)),
             entry(KeyEvent.VK_SPACE, () -> mapGen.putOrRemoveOpenSpace(camera.getPx()+camera.getCursorx(), camera.getPy()+camera.getCursory(), camera.getPz(), colorHandler.getCurrent())),
             entry(KeyEvent.VK_F, () -> mapGen.preFill(camera.getPx()+camera.getCursorx(), camera.getPy()+camera.getCursory(), colorHandler.getCurrent())),
-            entry(KeyEvent.VK_E, () -> mapGen.saveToFile())
+            entry(KeyEvent.VK_E, () -> mapsaver.saveToFile(mapGen.getMapSpaceAsList(), env.getEnvObjectList())),
+            entry(KeyEvent.VK_T, () -> env.addEnvObject(camera.getPx()+camera.getCursorx(), camera.getPy()+camera.getCursory(), camera.getPz()))
             )));
+
+        BufferedImage treeImage = readTree();
 
         while(true) {
 
-            MapGen.OpenMapSpace[][] map = mapGen.getMap(camera.getPx(), camera.getPy(), camera.getPz(), bimg.getWidth()/TILE_SIZE, bimg.getHeight()/TILE_SIZE);
+            OpenMapSpace[][] map = mapGen.getMap(camera.getPx(), camera.getPy(), camera.getPz(), bimg.getWidth()/TILE_SIZE, bimg.getHeight()/TILE_SIZE);
 
             for (int i=0; i < map.length; i++ ) {
                 for (int j=0; j < map[0].length; j++ ) {
@@ -82,6 +87,8 @@ public class App {
                 }   
             }
 
+
+            env.getEnvObjectList().forEach(envObj -> graphics.drawImage(treeImage, (int)(TILE_SIZE*(envObj.x()-camera.getPx())), (int)(TILE_SIZE*(envObj.y()-camera.getPy())), null));
             graphics.setColor(Color.GREEN);
             graphics.drawRect(TILE_SIZE*camera.getCursorx(), TILE_SIZE*camera.getCursory(), TILE_SIZE, TILE_SIZE);
             graphics.drawString(colorHandler.getCurrent().toString(), 100, 475);
@@ -119,7 +126,7 @@ public class App {
 
     }
 
-    public static BufferedImage readTree() throws IOException{
+    public static BufferedImage readTree() throws IOException {
         return ImageIO.read(new File("Tree.png"));
     }
 }

@@ -13,9 +13,9 @@ public class ColorHandler {
 	TerrainType current = TerrainType.EARTH1;
 
 	public ColorHandler() {
-		colorMap.put(TerrainType.EARTH1, new Color(212, 57, 50));
-		colorMap.put(TerrainType.EARTH2, new Color(212, 100, 105));
-		colorMap.put(TerrainType.EARTH3, new Color(212, 150, 125));
+		colorMap.put(TerrainType.EARTH1, new Color(100, 100, 50));
+		colorMap.put(TerrainType.EARTH2, new Color(45, 30, 45));
+		colorMap.put(TerrainType.EARTH3, new Color(50, 50, 10));
 		colorMap.put(TerrainType.BURNT_GRASS, new Color(150, 155, 50));
 		colorMap.put(TerrainType.ROAD, Color.gray.darker());
 		colorMap.put(TerrainType.FORREST_GRASS, Color.green.darker());
