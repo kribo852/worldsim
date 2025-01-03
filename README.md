@@ -1,4 +1,4 @@
-# worldsim
+# Worldsim
 
 ## A map editor for 2d games
 
@@ -14,11 +14,11 @@ Cycle active terrain type C-key.
 Cycle the current Toolbox tool with the F-key.
 
 Tools in the toolbox:
-*Floodfill the map (first place several blocks there).
-*Place terrain.
-*Remove terrain.
-*Place objects such as trees
-*Remove objects, in proximity of the cursor
+* Floodfill the map (first place several blocks there).
+* Place terrain.
+* Remove terrain.
+* Place objects such as trees
+* Remove objects, in proximity of the cursor
 
 
 Export/save map E-key (saves the map as a json string).
@@ -29,7 +29,7 @@ For more keyboard bindings, see the code.
 
 Uses shadow jar to make an executable jar that can be exported to other computers and run with jre.
 
-## building and running 
+## Building and running 
 
 Build and run with Gradle
 
