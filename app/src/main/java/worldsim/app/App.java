@@ -3,11 +3,8 @@ package worldsim.app;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
-import java.lang.Math;
 import java.lang.InterruptedException;
 import java.lang.Runnable;
-import java.util.function.BiConsumer;
 import static java.util.Map.entry;
 
 import javax.imageio.ImageIO;
@@ -21,8 +18,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
-import java.awt.event.MouseListener;
-import java.awt.event.MouseEvent;
 
 import lombok.AllArgsConstructor;
 
@@ -34,35 +29,27 @@ public class App {
     static final Environment env = new Environment();
     static final ColorHandler colorHandler = new ColorHandler();
     static final MapSaver mapsaver = new JsonMapSaver();
+    static final Toolbox toolbox = new Toolbox();
+    static final Camera camera = new Camera();
 
     public static void main(String[] args) throws IOException {
-
-        Camera camera = new Camera();
         JFrame jframe = new JFrame();
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.setVisible(true);
         jframe.setSize(500, 500);
         BufferedImage bimg = new BufferedImage(500, 500, 1);
         Graphics graphics = bimg.getGraphics();
-        jframe.addKeyListener(new DynamicKeyListener(Map.ofEntries(
-            entry(KeyEvent.VK_RIGHT, () -> camera.move(1, 0)),
-            entry(KeyEvent.VK_LEFT, () -> camera.move(-1, 0)),
-            entry(KeyEvent.VK_DOWN, () -> camera.move(0, 1)),
-            entry(KeyEvent.VK_UP, () -> camera.move(0, -1)),
-            entry(KeyEvent.VK_C, () -> colorHandler.cycleTerrain()),
-            entry(KeyEvent.VK_PLUS, () -> camera.moveZaxis(1)),
-            entry(KeyEvent.VK_MINUS, () -> camera.moveZaxis(-1)),
-            entry(KeyEvent.VK_W, () -> camera.moveCursor(0, -1)),
-            entry(KeyEvent.VK_S, () -> camera.moveCursor(0, 1)),
-            entry(KeyEvent.VK_D, () -> camera.moveCursor(1, 0)),
-            entry(KeyEvent.VK_A, () -> camera.moveCursor(-1, 0)),
-            entry(KeyEvent.VK_SPACE, () -> mapGen.putOrRemoveOpenSpace(camera.getPx()+camera.getCursorx(), camera.getPy()+camera.getCursory(), camera.getPz(), colorHandler.getCurrent())),
-            entry(KeyEvent.VK_F, () -> mapGen.preFill(camera.getPx()+camera.getCursorx(), camera.getPy()+camera.getCursory(), colorHandler.getCurrent())),
-            entry(KeyEvent.VK_E, () -> mapsaver.saveToFile(mapGen.getMapSpaceAsList(), env.getEnvObjectList())),
-            entry(KeyEvent.VK_T, () -> env.addEnvObject(camera.getPx()+camera.getCursorx(), camera.getPy()+camera.getCursory(), camera.getPz()))
-            )));
+        jframe.addKeyListener(getKeyListener());
 
         BufferedImage treeImage = readTree();
+
+        toolbox.initRegister(
+            new Toolbox.Tool("Floodfill", () -> mapGen.preFill(camera.getPx()+(int)camera.getCursorx(), camera.getPy()+(int)camera.getCursory(), colorHandler.getCurrent())),
+            new Toolbox.Tool("PutMapSpace", () -> mapGen.putOpenSpace(camera.getPx()+(int)camera.getCursorx(), camera.getPy()+(int)camera.getCursory(), camera.getPz(), colorHandler.getCurrent())),
+            new Toolbox.Tool("RemoveMapSpace", () -> mapGen.removeOpenspace(camera.getPx()+(int)camera.getCursorx(), camera.getPy()+(int)camera.getCursory(), camera.getPz())),
+            new Toolbox.Tool("PutObject", () -> env.addEnvObject(camera.getPx()+(float)camera.getCursorx(), camera.getPy()+(float)camera.getCursory(), camera.getPz())),
+            new Toolbox.Tool("RemoveObject", () -> env.removeInProximity(camera.getPx()+(float)camera.getCursorx(), camera.getPy()+(float)camera.getCursory()))
+        );
 
         while(true) {
 
@@ -90,8 +77,10 @@ public class App {
 
             env.getEnvObjectList().forEach(envObj -> graphics.drawImage(treeImage, (int)(TILE_SIZE*(envObj.x()-camera.getPx())), (int)(TILE_SIZE*(envObj.y()-camera.getPy())), null));
             graphics.setColor(Color.GREEN);
-            graphics.drawRect(TILE_SIZE*camera.getCursorx(), TILE_SIZE*camera.getCursory(), TILE_SIZE, TILE_SIZE);
+            graphics.drawRect(TILE_SIZE*(int)camera.getCursorx(), TILE_SIZE*(int)camera.getCursory(), TILE_SIZE, TILE_SIZE);
+            graphics.fillRect((int)(TILE_SIZE*camera.getCursorx()-2), (int)(TILE_SIZE*camera.getCursory()-2), 4, 4);
             graphics.drawString(colorHandler.getCurrent().toString(), 100, 475);
+            graphics.drawString("Toolbox" + toolbox.getCurrentName(), 200, 475);
             jframe.getGraphics().drawImage(bimg, 0, 10, null);
 
             try {
@@ -100,20 +89,48 @@ public class App {
 
             }
         }
-
     }
+
+    static KeyListener getKeyListener() {
+        return new DynamicKeyListener(
+            Map.ofEntries(
+                entry(KeyEvent.VK_W, () -> camera.moveCursor(0, -0.1)),
+                entry(KeyEvent.VK_S, () -> camera.moveCursor(0, 0.1)),
+                entry(KeyEvent.VK_D, () -> camera.moveCursor(0.1, 0)),
+                entry(KeyEvent.VK_A, () -> camera.moveCursor(-0.1, 0))
+            ),
+            Map.ofEntries(
+                entry(KeyEvent.VK_RIGHT, () -> camera.move(1, 0)),
+                entry(KeyEvent.VK_LEFT, () -> camera.move(-1, 0)),
+                entry(KeyEvent.VK_DOWN, () -> camera.move(0, 1)),
+                entry(KeyEvent.VK_UP, () -> camera.move(0, -1)),
+                entry(KeyEvent.VK_C, () -> colorHandler.cycleTerrain()),
+                entry(KeyEvent.VK_PLUS, () -> camera.moveZaxis(1)),
+                entry(KeyEvent.VK_MINUS, () -> camera.moveZaxis(-1)),
+                entry(KeyEvent.VK_SPACE, toolbox::runCurrentAction),
+                entry(KeyEvent.VK_F, toolbox::cycleForward),
+                entry(KeyEvent.VK_E, () -> mapsaver.saveToFile(mapGen.getMapSpaceAsList(), env.getEnvObjectList()))
+            ));
+    }
+
 
     @AllArgsConstructor
     static class DynamicKeyListener implements KeyListener {
 
-        Map<Integer, Runnable> actions;
+
+        Map<Integer, Runnable> keyPressActions;
+        Map<Integer, Runnable> keyReleaseActions;
             
         public void keyPressed(KeyEvent e) {
+            Runnable action = keyPressActions.get(e.getKeyCode());
             
+            if(action != null) {
+                action.run();
+            }
         }
 
         public void keyReleased(KeyEvent e) {
-            Runnable action = actions.get(e.getKeyCode());
+            Runnable action = keyReleaseActions.get(e.getKeyCode());
             
             if(action != null) {
                 action.run();

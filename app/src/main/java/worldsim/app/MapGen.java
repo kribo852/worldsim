@@ -43,19 +43,11 @@ public class MapGen {
 		return rtn;
 	}
 
-	public void putOrRemoveOpenSpace(int x, int y, int z, TerrainType terrainType) {
-		if(map.get(new Coordinate(x, y, z)) == null) {
-			putOpenSpace(x, y, z, terrainType);
-		} else {
-			removeOpenspace(x, y, z);
-		}
-	}
-
-	private void putOpenSpace(int x, int y, int z,  TerrainType terrainType) {
+	public void putOpenSpace(int x, int y, int z,  TerrainType terrainType) {
 		map.put(new Coordinate(x, y, z), new OpenMapSpace(terrainType, x, y, z));
 	}
 
-	private void removeOpenspace(int x, int y, int z) {
+	public void removeOpenspace(int x, int y, int z) {
 		map.remove(new Coordinate(x, y, z));
 	}
 

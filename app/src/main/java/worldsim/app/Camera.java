@@ -10,8 +10,8 @@ public class Camera {
 	int px = 0;
 	int py = 0;
 	int pz = 0;
-	int cursorx = 10;
-	int cursory = 10;
+	double cursorx = 10;
+	double cursory = 10;
 
 
 	void move(int dx, int dy){
@@ -23,7 +23,7 @@ public class Camera {
 		pz += dz;
 	}
 
-	void moveCursor(int dcursorx, int dcursory) {
+	void moveCursor(double dcursorx, double dcursory) {
 		cursorx += dcursorx;
 		cursory += dcursory;
 	}
