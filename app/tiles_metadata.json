@@ -1,0 +1,5 @@
+{
+ "xcoordinates":[0, 20, 40, 60, 80, 100],
+ "ycoordinates":[0, 0, 0, 0, 0, 0],
+ "spritenames" :["DIRT", "GRASS", "DEAD_LEAFS", "MARSHY_GRASS", "MARSH", "THICK_GRASS"]
+}

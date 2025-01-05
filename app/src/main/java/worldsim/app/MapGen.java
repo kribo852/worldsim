@@ -21,18 +21,23 @@ public class MapGen {
 
 	Map<Coordinate, OpenMapSpace> map;
 
+	@Setter
+	List<String> tileNames;
+
+	int selectedTile;
+
 	public MapGen() {
 		final Random rnd = new Random();
+		selectedTile = 0;
 		map = new HashMap<>();
 	} 
 
 	public OpenMapSpace[][] getMap(int x, int y, int z, int width, int height) {
-		
 		OpenMapSpace[][] rtn = new OpenMapSpace[width][height];
 
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				for(int k=z; k>=0; k--) {
+				for(int k = z; k >= 0; k--) {
 					OpenMapSpace tmp = map.get(new Coordinate(i + x, j + y, k));
 					if(rtn[i][j] == null) {
 						rtn[i][j] = tmp;
@@ -43,16 +48,23 @@ public class MapGen {
 		return rtn;
 	}
 
-	public void putOpenSpace(int x, int y, int z,  TerrainType terrainType) {
-		map.put(new Coordinate(x, y, z), new OpenMapSpace(terrainType, x, y, z));
+	public String getSelectedTerrainType() {
+		return tileNames.get(selectedTile);
+	}
+
+	public void cycleSelectedTerrain() {
+		selectedTile = (selectedTile + 1) % tileNames.size();
+	}
+
+	public void putOpenSpace(int x, int y, int z) {
+		map.put(new Coordinate(x, y, z), new OpenMapSpace(getSelectedTerrainType(), x, y, z));
 	}
 
 	public void removeOpenspace(int x, int y, int z) {
 		map.remove(new Coordinate(x, y, z));
 	}
 
-
-	public void preFill(int x, int y, TerrainType fillType) {
+	public void preFill(int x, int y) {
 		LinkedList<Coordinate> positionQueue = new LinkedList<Coordinate>();
 
 		positionQueue.add(new Coordinate(x, y, 0));
@@ -81,7 +93,7 @@ public class MapGen {
 				}
 
 				if(map.get(new Coordinate(get.x()+dx, get.y()+dy, 0)) == null) {
-					putOpenSpace(get.x()+dx, get.y()+dy, 0, fillType);
+					putOpenSpace(get.x()+dx, get.y()+dy, 0);
 					if(i < 1000) {
 						positionQueue.add(new Coordinate(get.x()+dx, get.y()+dy, 0));
 					}

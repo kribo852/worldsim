@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 public class OpenMapSpace {
-	TerrainType terrainType;
+	String terrainType;
 	int x;
 	int y;
 	int z;

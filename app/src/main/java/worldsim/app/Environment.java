@@ -9,12 +9,23 @@ import java.lang.Math;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @NoArgsConstructor
 class Environment {
 
 	List<EnvObject> env = new CopyOnWriteArrayList<>();
+
+	@Setter
+ 	List<String> objectnames; 
+
+ 	int selected = 0;
+
+
+ 	public void cycleSelected() {
+		selected = (selected + 1) % objectnames.size();
+	}
 
 
 	public List<EnvObject> getEnvObjectList() {
@@ -24,7 +35,7 @@ class Environment {
 	public void addEnvObject(float x, float y, int z) {
 		Random rnd = new Random();
 
-		env.add(new EnvObject(x, y, z, EnvType.TREE));
+		env.add(new EnvObject(x, y, z, objectnames.get(selected)));
 	}
 
 	public void removeInProximity(float x, float y) {

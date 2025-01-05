@@ -27,46 +27,46 @@ public class App {
 
     static final MapGen mapGen = new MapGen();
     static final Environment env = new Environment();
-    static final ColorHandler colorHandler = new ColorHandler();
     static final MapSaver mapsaver = new JsonMapSaver();
     static final Toolbox toolbox = new Toolbox();
     static final Camera camera = new Camera();
+    static final SpriteLoader tilespriteloader = new SpriteLoader("tiles");
+    static final SpriteLoader objectspriteloader = new SpriteLoader("objects");
 
     public static void main(String[] args) throws IOException {
         JFrame jframe = new JFrame();
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.setVisible(true);
         jframe.setSize(500, 500);
-        BufferedImage bimg = new BufferedImage(500, 500, 1);
-        Graphics graphics = bimg.getGraphics();
+        BufferedImage screenBufferImg = new BufferedImage(500, 500, 1);
+        Graphics graphics = screenBufferImg.getGraphics();
         jframe.addKeyListener(getKeyListener());
 
-        BufferedImage treeImage = readTree();
+        mapGen.setTileNames(tilespriteloader.getSpritenames());
+        env.setObjectnames(objectspriteloader.getSpritenames());
 
         toolbox.initRegister(
-            new Toolbox.Tool("Floodfill", () -> mapGen.preFill(camera.getPx()+(int)camera.getCursorx(), camera.getPy()+(int)camera.getCursory(), colorHandler.getCurrent())),
-            new Toolbox.Tool("PutMapSpace", () -> mapGen.putOpenSpace(camera.getPx()+(int)camera.getCursorx(), camera.getPy()+(int)camera.getCursory(), camera.getPz(), colorHandler.getCurrent())),
+            new Toolbox.Tool("PutMapSpace", () -> mapGen.putOpenSpace(camera.getPx()+(int)camera.getCursorx(), camera.getPy()+(int)camera.getCursory(), camera.getPz())),
             new Toolbox.Tool("RemoveMapSpace", () -> mapGen.removeOpenspace(camera.getPx()+(int)camera.getCursorx(), camera.getPy()+(int)camera.getCursory(), camera.getPz())),
+            new Toolbox.Tool("Floodfill", () -> mapGen.preFill(camera.getPx()+(int)camera.getCursorx(), camera.getPy()+(int)camera.getCursory())),    
             new Toolbox.Tool("PutObject", () -> env.addEnvObject(camera.getPx()+(float)camera.getCursorx(), camera.getPy()+(float)camera.getCursory(), camera.getPz())),
             new Toolbox.Tool("RemoveObject", () -> env.removeInProximity(camera.getPx()+(float)camera.getCursorx(), camera.getPy()+(float)camera.getCursory()))
         );
 
         while(true) {
-
-            OpenMapSpace[][] map = mapGen.getMap(camera.getPx(), camera.getPy(), camera.getPz(), bimg.getWidth()/TILE_SIZE, bimg.getHeight()/TILE_SIZE);
+            OpenMapSpace[][] map = mapGen.getMap(camera.getPx(), camera.getPy(), camera.getPz(), screenBufferImg.getWidth()/TILE_SIZE, screenBufferImg.getHeight()/TILE_SIZE);
 
             for (int i=0; i < map.length; i++ ) {
                 for (int j=0; j < map[0].length; j++ ) {
                     if(map[i][j] != null) {
-                        Color currentSquareColor = colorHandler.getTerrainColor(map[i][j].getTerrainType());
+                        BufferedImage tileImg = tilespriteloader.getSpriteFromName(map[i][j].getTerrainType());
+                        graphics.drawImage(tileImg, TILE_SIZE*i, TILE_SIZE*j, null);
                         
                         if(map[i][j].getZ() < camera.getPz()) {
-                            currentSquareColor = currentSquareColor.darker();
+                            graphics.setColor(new Color(0,0,0, 125));
+                            graphics.fillRect(TILE_SIZE*i, TILE_SIZE*j, TILE_SIZE, TILE_SIZE);
                         }
 
-                        graphics.setColor(currentSquareColor);
-
-                        graphics.fillRect(TILE_SIZE*i, TILE_SIZE*j, TILE_SIZE, TILE_SIZE);
                     } else {
                         graphics.setColor(Color.black);
                         graphics.fillRect(TILE_SIZE*i, TILE_SIZE*j, TILE_SIZE, TILE_SIZE);
@@ -75,13 +75,13 @@ public class App {
             }
 
 
-            env.getEnvObjectList().forEach(envObj -> graphics.drawImage(treeImage, (int)(TILE_SIZE*(envObj.x()-camera.getPx())), (int)(TILE_SIZE*(envObj.y()-camera.getPy())), null));
+            env.getEnvObjectList().forEach(envObj -> graphics.drawImage(objectspriteloader.getSpriteFromName(envObj.envType()), (int)(TILE_SIZE*(envObj.x()-camera.getPx())), (int)(TILE_SIZE*(envObj.y()-camera.getPy())), null));
             graphics.setColor(Color.GREEN);
             graphics.drawRect(TILE_SIZE*(int)camera.getCursorx(), TILE_SIZE*(int)camera.getCursory(), TILE_SIZE, TILE_SIZE);
             graphics.fillRect((int)(TILE_SIZE*camera.getCursorx()-2), (int)(TILE_SIZE*camera.getCursory()-2), 4, 4);
-            graphics.drawString(colorHandler.getCurrent().toString(), 100, 475);
+            graphics.drawString(mapGen.getSelectedTerrainType(), 100, 475);
             graphics.drawString("Toolbox" + toolbox.getCurrentName(), 200, 475);
-            jframe.getGraphics().drawImage(bimg, 0, 10, null);
+            jframe.getGraphics().drawImage(screenBufferImg, 0, 10, null);
 
             try {
                 Thread.sleep(50);
@@ -104,7 +104,8 @@ public class App {
                 entry(KeyEvent.VK_LEFT, () -> camera.move(-1, 0)),
                 entry(KeyEvent.VK_DOWN, () -> camera.move(0, 1)),
                 entry(KeyEvent.VK_UP, () -> camera.move(0, -1)),
-                entry(KeyEvent.VK_C, () -> colorHandler.cycleTerrain()),
+                entry(KeyEvent.VK_C, () -> mapGen.cycleSelectedTerrain()),
+                entry(KeyEvent.VK_X, () -> env.cycleSelected()),
                 entry(KeyEvent.VK_PLUS, () -> camera.moveZaxis(1)),
                 entry(KeyEvent.VK_MINUS, () -> camera.moveZaxis(-1)),
                 entry(KeyEvent.VK_SPACE, toolbox::runCurrentAction),
@@ -141,9 +142,5 @@ public class App {
             
         }
 
-    }
-
-    public static BufferedImage readTree() throws IOException {
-        return ImageIO.read(new File("Tree.png"));
     }
 }
