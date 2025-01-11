@@ -41,4 +41,6 @@ Build and run with Gradle
 
 
 ![screenshot](/worldsim1.png "A screenshot from the editor")
+![screenshot](/worldsim2.png "Another screenshot from the editor")
+
 
