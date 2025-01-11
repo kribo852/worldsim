@@ -1,5 +1,30 @@
+[{
+	"xcoordinate" : 0,
+	"ycoordinate" : 0,
+	"spritename" : "DIRT"
+},
 {
- "xcoordinates":[0, 20, 40, 60, 80, 100],
- "ycoordinates":[0, 0, 0, 0, 0, 0],
- "spritenames" :["DIRT", "GRASS", "DEAD_LEAFS", "MARSHY_GRASS", "MARSH", "THICK_GRASS"]
-}
+	"xcoordinate" : 20,
+	"ycoordinate" : 0,
+	"spritename" : "GRASS"
+},
+{
+	"xcoordinate" : 40,
+	"ycoordinate" : 0,
+	"spritename" : "DEAD_LEAFS"
+},
+{
+	"xcoordinate" : 60,
+	"ycoordinate" : 0,
+	"spritename" : "MARSHY_GRASS"
+},
+{
+	"xcoordinate" : 80,
+	"ycoordinate" : 0,
+	"spritename" : "MARSH"
+},
+{
+	"xcoordinate" : 100,
+	"ycoordinate" : 0,
+	"spritename" : "THICK_GRASS"
+}]

@@ -1,12 +1,15 @@
 package worldsim.app;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.io.IOException;
 import java.io.FileReader;
 import java.io.FileNotFoundException;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.util.stream.Collectors;
+
 
 import java.awt.image.BufferedImage;
 
@@ -16,11 +19,12 @@ import lombok.Getter;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
-
+import java.lang.reflect.Type;
+import com.google.gson.reflect.TypeToken;
 
 public class SpriteLoader {
 
-	SpriteMetadata spritemetadata;
+	List<SpriteMetadata> spritemetadata;
 	BufferedImage sprites;
 
 	
@@ -28,7 +32,9 @@ public class SpriteLoader {
 		try {
 			Gson gson = new Gson();
 			JsonReader reader = new JsonReader(new FileReader(fileName + "_metadata.json"));
-			spritemetadata = gson.fromJson(reader, SpriteMetadata.class);
+			Type listType = new TypeToken<ArrayList<SpriteMetadata>>(){}.getType();
+
+			spritemetadata = gson.fromJson(reader, listType);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -41,11 +47,11 @@ public class SpriteLoader {
 
 
 	public BufferedImage getSpriteFromName(String spritename) {
-		for (int i=0; i<spritemetadata.getSpritenames().size(); i++) {
-			if (spritename.equals(spritemetadata.getSpritenames().get(i))) {
+		for (int i=0; i<spritemetadata.size(); i++) {
+			if (spritename.equals(spritemetadata.get(i).getSpritename())) {
 				return sprites.getSubimage(
-					spritemetadata.getXcoordinates().get(i), 
-					spritemetadata.getYcoordinates().get(i),
+					spritemetadata.get(i).getXcoordinate(), 
+					spritemetadata.get(i).getYcoordinate(),
 					20,
 					20
 				);
@@ -55,7 +61,7 @@ public class SpriteLoader {
 	}
 
 	public List<String> getSpritenames() {
-		return spritemetadata.getSpritenames();
+		return spritemetadata.stream().map(sprite -> sprite.getSpritename()).collect(Collectors.toList());
 	}
 
 
@@ -63,9 +69,11 @@ public class SpriteLoader {
 	@AllArgsConstructor
 	@Getter
 	class SpriteMetadata {
-		List<Integer> xcoordinates;
-		List<Integer> ycoordinates;
-		List<String> spritenames; 
+		Integer xcoordinate;
+		Integer ycoordinate;
+		String spritename;
+		Integer width;
+		Integer height; 
 	}
 
 } 

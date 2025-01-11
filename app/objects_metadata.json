@@ -1,5 +1,22 @@
-{
- "xcoordinates":[0, 20, 40, 60],
- "ycoordinates":[0, 0, 0, 0],
- "spritenames" :["SPRUCE", "PLANTS", "SWAMP_TREE", "BOULDER"]
-}
+[
+	{
+		"xcoordinate" : 0,
+		"ycoordinate" : 0,
+		"spritename" : "SPRUCE"
+	},
+	{
+		"xcoordinate" : 20,
+		"ycoordinate" : 0,
+		"spritename" : "PLANTS"
+	},
+	{
+		"xcoordinate" : 40,
+		"ycoordinate" : 0,
+		"spritename" : "SWAMP_TREE"
+	},
+	{
+		"xcoordinate" : 60,
+		"ycoordinate" : 0,
+		"spritename" : "BOULDER"
+	}
+]
