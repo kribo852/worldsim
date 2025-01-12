@@ -43,6 +43,6 @@ Build and run with Gradle
 ![screenshot](/worldsim1.png "A screenshot from the editor")
 ![screenshot](/worldsim2.png "Another screenshot from the editor")
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/{owner}/{repo}/CI?label=build)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/kribo852/worldsim/CI?label=build)
 
 
