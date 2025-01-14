@@ -49,11 +49,12 @@ public class SpriteLoader {
 	public BufferedImage getSpriteFromName(String spritename) {
 		for (int i=0; i<spritemetadata.size(); i++) {
 			if (spritename.equals(spritemetadata.get(i).getSpritename())) {
+				final SpriteMetadata smd = spritemetadata.get(i);
 				return sprites.getSubimage(
-					spritemetadata.get(i).getXcoordinate(), 
-					spritemetadata.get(i).getYcoordinate(),
-					20,
-					20
+					smd.getXcoordinate(), 
+					smd.getYcoordinate(),
+					smd.getWidth(),
+					smd.getHeight()
 				);
 			}		
 		}	

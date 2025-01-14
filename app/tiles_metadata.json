@@ -2,36 +2,50 @@
 	{
 		"xcoordinate" : 0,
 		"ycoordinate" : 0,
-		"spritename" : "DIRT"
+		"spritename" : "DIRT",
+		"width": 20,
+		"height": 20
 	},
 	{
 		"xcoordinate" : 20,
 		"ycoordinate" : 0,
-		"spritename" : "GRASS"
+		"spritename" : "GRASS",
+		"width": 20,
+		"height": 20
 	},
 	{
 		"xcoordinate" : 40,
 		"ycoordinate" : 0,
-		"spritename" : "DEAD_LEAFS"
+		"spritename" : "DEAD_LEAFS",
+		"width": 20,
+		"height": 20
 	},
 	{
 		"xcoordinate" : 60,
 		"ycoordinate" : 0,
-		"spritename" : "MARSHY_GRASS"
+		"spritename" : "MARSHY_GRASS",
+		"width": 20,
+		"height": 20
 	},
 	{
 		"xcoordinate" : 80,
 		"ycoordinate" : 0,
-		"spritename" : "MARSH"
+		"spritename" : "MARSH",
+		"width": 20,
+		"height": 20
 	},
 	{
 		"xcoordinate" : 100,
 		"ycoordinate" : 0,
-		"spritename" : "DRY_GRASS"
+		"spritename" : "DRY_GRASS",
+		"width": 20,
+		"height": 20
 	},
 	{
 		"xcoordinate" : 120,
 		"ycoordinate" : 0,
-		"spritename" : "MOSSY_ROCK"
+		"spritename" : "MOSSY_ROCK",
+		"width": 20,
+		"height": 20
 	}
 ]

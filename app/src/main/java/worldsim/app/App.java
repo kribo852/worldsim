@@ -76,10 +76,10 @@ public class App {
 
 
             env.getEnvObjectList().forEach(envObj -> graphics.drawImage(objectspriteloader.getSpriteFromName(envObj.envType()), (int)(TILE_SIZE*(envObj.x()-camera.getPx())), (int)(TILE_SIZE*(envObj.y()-camera.getPy())), null));
+            
+            graphics.drawImage(tilespriteloader.getSpriteFromName(mapGen.getSelectedTerrainType()), TILE_SIZE*(int)camera.getCursorx(), TILE_SIZE*(int)camera.getCursory(), null);
+            graphics.drawImage(objectspriteloader.getSpriteFromName(env.getSeletedObjectType()), (int)(TILE_SIZE*camera.getCursorx()), (int)(TILE_SIZE*camera.getCursory()), null);
             graphics.setColor(Color.GREEN);
-            graphics.drawRect(TILE_SIZE*(int)camera.getCursorx(), TILE_SIZE*(int)camera.getCursory(), TILE_SIZE, TILE_SIZE);
-            graphics.fillRect((int)(TILE_SIZE*camera.getCursorx()-2), (int)(TILE_SIZE*camera.getCursory()-2), 4, 4);
-            graphics.drawString(mapGen.getSelectedTerrainType(), 100, 475);
             graphics.drawString("Toolbox" + toolbox.getCurrentName(), 200, 475);
             jframe.getGraphics().drawImage(screenBufferImg, 0, 10, null);
 

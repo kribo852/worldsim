@@ -32,10 +32,14 @@ class Environment {
 		return env;
 	}
 
+	public String getSeletedObjectType() {
+		return objectnames.get(selected);
+	}
+
 	public void addEnvObject(float x, float y, int z) {
 		Random rnd = new Random();
 
-		env.add(new EnvObject(x, y, z, objectnames.get(selected)));
+		env.add(new EnvObject(x, y, z, getSeletedObjectType()));
 	}
 
 	public void removeInProximity(float x, float y) {

@@ -2,21 +2,50 @@
 	{
 		"xcoordinate" : 0,
 		"ycoordinate" : 0,
-		"spritename" : "SPRUCE"
+		"spritename" : "SPRUCE",
+		"width" : 20,
+		"height" : 20
 	},
 	{
 		"xcoordinate" : 20,
 		"ycoordinate" : 0,
-		"spritename" : "PLANTS"
+		"spritename" : "PLANTS",
+		"width" : 20,
+		"height" : 20
 	},
 	{
 		"xcoordinate" : 40,
 		"ycoordinate" : 0,
-		"spritename" : "SWAMP_TREE"
+		"spritename" : "SWAMP_TREE",
+		"width" : 20,
+		"height" : 20
 	},
 	{
 		"xcoordinate" : 60,
 		"ycoordinate" : 0,
-		"spritename" : "BOULDER"
+		"spritename" : "BOULDER",
+		"width" : 20,
+		"height" : 20
+	},
+	{
+		"xcoordinate" : 80,
+		"ycoordinate" : 0,
+		"spritename" : "GIGASPRUCE",
+		"width" : 20,
+		"height" : 60
+	},
+	{
+		"xcoordinate" : 0,
+		"ycoordinate" : 20,
+		"spritename" : "BLUE_WAYPOINT",
+		"width" : 20,
+		"height" : 20
+	},
+	{
+		"xcoordinate" : 20,
+		"ycoordinate" : 20,
+		"spritename" : "GREEN_WAYPOINT",
+		"width" : 20,
+		"height" : 20
 	}
 ]
