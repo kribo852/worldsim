@@ -9,21 +9,22 @@ This is a map editor for 2d games, primarily with top-down view.
 Move the camera/window with Arrow UP,DOWN,LEFT,RIGHT.
 Move the cursor, for placing terrain and Objects with W,A,S,D.
 
-Cycle active terrain type C-key.
+Cycle the currently selected terrain type with the C-key.
+Cycle the currently selected object type with the X-key.
 
 Cycle the current Toolbox tool with the F-key.
 
 Tools in the toolbox:
-* Floodfill the map (first place several blocks there).
 * Place terrain.
 * Remove terrain.
+* Floodfill the map (first place several tiles close to each other at the spot).
 * Place objects such as trees
 * Remove objects, in proximity of the cursor
 
 
 Export/save map E-key (saves the map as a json string).
 
-For more keyboard bindings, see the code.
+For more keyboard bindings, see the code (registered keys in file App.java).
 
 ## Other features
 
