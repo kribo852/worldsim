@@ -11,7 +11,6 @@ Move the cursor, for placing terrain and Objects with W,A,S,D.
 
 Cycle the currently selected terrain type with the C-key.
 Cycle the currently selected object type with the X-key.
-
 Cycle the current Toolbox tool with the F-key.
 
 Tools in the toolbox:
@@ -21,6 +20,7 @@ Tools in the toolbox:
 * Place objects such as trees
 * Remove objects, in proximity of the cursor
 
+Use the active tool from the toolbox with the SPACE-key.
 
 Export/save map E-key (saves the map as a json string).
 
