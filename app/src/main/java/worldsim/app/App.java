@@ -46,11 +46,11 @@ public class App {
         env.setObjectnames(objectspriteloader.getSpritenames());
 
         toolbox.initRegister(
-            new Toolbox.Tool("PutMapSpace", () -> mapGen.putOpenSpace(camera.getPx()+(int)camera.getCursorx(), camera.getPy()+(int)camera.getCursory(), camera.getPz())),
-            new Toolbox.Tool("RemoveMapSpace", () -> mapGen.removeOpenspace(camera.getPx()+(int)camera.getCursorx(), camera.getPy()+(int)camera.getCursory(), camera.getPz())),
-            new Toolbox.Tool("Floodfill", () -> mapGen.preFill(camera.getPx()+(int)camera.getCursorx(), camera.getPy()+(int)camera.getCursory())),    
-            new Toolbox.Tool("PutObject", () -> env.addEnvObject(camera.getPx()+(float)camera.getCursorx(), camera.getPy()+(float)camera.getCursory(), camera.getPz())),
-            new Toolbox.Tool("RemoveObject", () -> env.removeInProximity(camera.getPx()+(float)camera.getCursorx(), camera.getPy()+(float)camera.getCursory()))
+            new Toolbox.Tool("PutMapSpace", () -> mapGen.putOpenSpace(camera.getPx()+(int)camera.getCursorx(), camera.getPy()+(int)camera.getCursory(), camera.getPz()), getTileCursor()),
+            new Toolbox.Tool("RemoveMapSpace", () -> mapGen.removeOpenspace(camera.getPx()+(int)camera.getCursorx(), camera.getPy()+(int)camera.getCursory(), camera.getPz()), getRemoveTileCursor()),
+            new Toolbox.Tool("Floodfill", () -> mapGen.preFill(camera.getPx()+(int)camera.getCursorx(), camera.getPy()+(int)camera.getCursory()), getTileCursor()),    
+            new Toolbox.Tool("PutObject", () -> env.addEnvObject(camera.getPx()+(float)camera.getCursorx(), camera.getPy()+(float)camera.getCursory(), camera.getPz()), getObjectCursor()),
+            new Toolbox.Tool("RemoveObject", () -> env.removeInProximity(camera.getPx()+(float)camera.getCursorx(), camera.getPy()+(float)camera.getCursory()), getRemoveObjectCursor())
         );
 
         while(true) {
@@ -73,12 +73,10 @@ public class App {
                     }
                 }   
             }
-
-
             env.getEnvObjectList().forEach(envObj -> graphics.drawImage(objectspriteloader.getSpriteFromName(envObj.envType()), (int)(TILE_SIZE*(envObj.x()-camera.getPx())), (int)(TILE_SIZE*(envObj.y()-camera.getPy())), null));
             
-            graphics.drawImage(tilespriteloader.getSpriteFromName(mapGen.getSelectedTerrainType()), TILE_SIZE*(int)camera.getCursorx(), TILE_SIZE*(int)camera.getCursory(), null);
-            graphics.drawImage(objectspriteloader.getSpriteFromName(env.getSeletedObjectType()), (int)(TILE_SIZE*camera.getCursorx()), (int)(TILE_SIZE*camera.getCursory()), null);
+            //TOOLS
+            toolbox.getCurrentCursorDepiction().depictConsumer(camera.getCursorx(), camera.getCursory(), graphics);   
             graphics.setColor(Color.GREEN);
             graphics.drawString("Toolbox" + toolbox.getCurrentName(), 200, 475);
             jframe.getGraphics().drawImage(screenBufferImg, 0, 10, null);
@@ -143,4 +141,33 @@ public class App {
         }
 
     }
+
+
+    static CursorDepiction getTileCursor() {
+        return (cx, cy, g) -> {
+            g.drawImage(tilespriteloader.getSpriteFromName(mapGen.getSelectedTerrainType()), TILE_SIZE*(int)cx, TILE_SIZE*(int)cy, null); 
+            g.setColor(new Color(0, 255, 0, 50));
+            g.drawRect(TILE_SIZE*(int)cx, TILE_SIZE*(int)cy, TILE_SIZE, TILE_SIZE);  
+        };
+    }
+
+    static CursorDepiction getRemoveTileCursor() {
+        return (cx, cy, g) -> {
+            g.setColor(Color.black);    
+            g.fillRect(TILE_SIZE*(int)cx, TILE_SIZE*(int)cy, TILE_SIZE, TILE_SIZE);  
+        };
+    }
+
+    static CursorDepiction getObjectCursor() {
+        return (cx, cy, g) -> g.drawImage(objectspriteloader.getSpriteFromName(env.getSeletedObjectType()), (int)(TILE_SIZE*cx), (int)(TILE_SIZE*cy), null);
+    }
+
+    static CursorDepiction getRemoveObjectCursor() {
+        return (cx, cy, g) -> {
+            g.setColor(Color.red);
+            g.drawLine((int)(TILE_SIZE*cx)-3, (int)(TILE_SIZE*cy)-3, (int)(TILE_SIZE*cx)+3, (int)(TILE_SIZE*cy)+3);
+            g.drawLine((int)(TILE_SIZE*cx)+3, (int)(TILE_SIZE*cy)-3, (int)(TILE_SIZE*cx)-3, (int)(TILE_SIZE*cy)+3);
+        };
+    }
+
 }

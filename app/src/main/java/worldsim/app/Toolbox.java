@@ -33,12 +33,16 @@ public class Toolbox {
 		tools.get(index).getAction().run();
 	}
 
+	public CursorDepiction getCurrentCursorDepiction() {
+		return tools.get(index).getCursordepiction();
+	}
+
 	@Getter
 	@AllArgsConstructor
 	static class Tool{
 		String name;
 		Runnable action;
-
+		CursorDepiction cursordepiction;
 	}
 
 }
