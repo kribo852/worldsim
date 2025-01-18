@@ -80,7 +80,7 @@ public class App {
             toolbox.getCurrentCursorDepiction().depictConsumer(camera.getCursorx(), camera.getCursory(), graphics);   
             graphics.setColor(Color.GREEN);
             graphics.drawString("Toolbox" + toolbox.getCurrentName(), 200, 475);
-            jframe.getGraphics().drawImage(screenBufferImg, 0, 10, null);
+            jframe.getGraphics().drawImage(screenBufferImg, 0, 0, null);
 
             try {
                 Thread.sleep(50);
