@@ -50,7 +50,8 @@ public class App {
             new Toolbox.Tool("RemoveMapSpace", () -> mapGen.removeOpenspace(camera.getPx()+(int)camera.getCursorx(), camera.getPy()+(int)camera.getCursory(), camera.getPz()), getRemoveTileCursor()),
             new Toolbox.Tool("Floodfill", () -> mapGen.preFill(camera.getPx()+(int)camera.getCursorx(), camera.getPy()+(int)camera.getCursory()), getTileCursor()),    
             new Toolbox.Tool("PutObject", () -> env.addEnvObject(camera.getPx()+(float)camera.getCursorx(), camera.getPy()+(float)camera.getCursory(), camera.getPz()), getObjectCursor()),
-            new Toolbox.Tool("RemoveObject", () -> env.removeInProximity(camera.getPx()+(float)camera.getCursorx(), camera.getPy()+(float)camera.getCursory()), getRemoveObjectCursor())
+            new Toolbox.Tool("RemoveObject", () -> env.removeInProximity(camera.getPx()+(float)camera.getCursorx(), camera.getPy()+(float)camera.getCursory()), getRemoveObjectCursor()),
+            new Toolbox.Tool("MiniMap", () -> {}, showMiniMap())
         );
 
         while(true) {
@@ -144,29 +145,46 @@ public class App {
 
 
     static CursorDepiction getTileCursor() {
-        return (cx, cy, g) -> {
-            g.drawImage(tilespriteloader.getSpriteFromName(mapGen.getSelectedTerrainType()), TILE_SIZE*(int)cx, TILE_SIZE*(int)cy, null); 
+        return (cursorx, cursory, g) -> {
+            g.drawImage(tilespriteloader.getSpriteFromName(mapGen.getSelectedTerrainType()), TILE_SIZE*(int)cursorx, TILE_SIZE*(int)cursory, null); 
             g.setColor(new Color(0, 255, 0, 50));
-            g.drawRect(TILE_SIZE*(int)cx, TILE_SIZE*(int)cy, TILE_SIZE, TILE_SIZE);  
+            g.drawRect(TILE_SIZE*(int)cursorx, TILE_SIZE*(int)cursory, TILE_SIZE, TILE_SIZE);  
         };
     }
 
     static CursorDepiction getRemoveTileCursor() {
-        return (cx, cy, g) -> {
+        return (cursorx, cursory, g) -> {
             g.setColor(Color.black);    
-            g.fillRect(TILE_SIZE*(int)cx, TILE_SIZE*(int)cy, TILE_SIZE, TILE_SIZE);  
+            g.fillRect(TILE_SIZE*(int)cursorx, TILE_SIZE*(int)cursory, TILE_SIZE, TILE_SIZE);  
         };
     }
 
     static CursorDepiction getObjectCursor() {
-        return (cx, cy, g) -> g.drawImage(objectspriteloader.getSpriteFromName(env.getSeletedObjectType()), (int)(TILE_SIZE*cx), (int)(TILE_SIZE*cy), null);
+        return (cursorx, cursory, g) -> g.drawImage(objectspriteloader.getSpriteFromName(env.getSeletedObjectType()), (int)(TILE_SIZE*cursorx), (int)(TILE_SIZE*cursory), null);
     }
 
     static CursorDepiction getRemoveObjectCursor() {
-        return (cx, cy, g) -> {
+        return (cursorx, cursory, g) -> {
             g.setColor(Color.red);
-            g.drawLine((int)(TILE_SIZE*cx)-3, (int)(TILE_SIZE*cy)-3, (int)(TILE_SIZE*cx)+3, (int)(TILE_SIZE*cy)+3);
-            g.drawLine((int)(TILE_SIZE*cx)+3, (int)(TILE_SIZE*cy)-3, (int)(TILE_SIZE*cx)-3, (int)(TILE_SIZE*cy)+3);
+            g.drawLine((int)(TILE_SIZE*cursorx)-3, (int)(TILE_SIZE*cursory)-3, (int)(TILE_SIZE*cursorx)+3, (int)(TILE_SIZE*cursory)+3);
+            g.drawLine((int)(TILE_SIZE*cursorx)+3, (int)(TILE_SIZE*cursory)-3, (int)(TILE_SIZE*cursorx)-3, (int)(TILE_SIZE*cursory)+3);
+        };
+    }
+
+    static CursorDepiction showMiniMap() {
+        int screensize = 500;//should maybe be static global
+        return (cursorx, cursory, g) -> {
+            g.setColor(Color.green);
+            OpenMapSpace[][] map = mapGen.getMap(-250, -250, camera.getPz(), screensize, screensize);
+            for(int i=0; i<screensize; i++) {
+                for(int j=0; j<screensize; j++) {
+                    if(map[i][j] != null) {
+                        g.fillRect(i, j, 1, 1);
+                    }
+                }   
+            }
+            g.setColor(new Color(255, 0, 0, 255));
+            g.drawRect(camera.getPx()+screensize/2, camera.getPy()+screensize/2, screensize/TILE_SIZE, screensize/TILE_SIZE);
         };
     }
 
