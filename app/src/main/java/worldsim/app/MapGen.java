@@ -37,10 +37,11 @@ public class MapGen {
 
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				for(int k = z; k >= 0; k--) {
+				for(int k = z; k > z-3; k--) {
 					OpenMapSpace tmp = map.get(new Coordinate(i + x, j + y, k));
-					if(rtn[i][j] == null) {
+					if(tmp != null) {
 						rtn[i][j] = tmp;
+						break;
 					}
 				}
 			}	
