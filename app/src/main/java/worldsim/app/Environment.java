@@ -47,4 +47,8 @@ class Environment {
 		.collect(Collectors.toCollection(CopyOnWriteArrayList::new));
 	}
 
+	public void clear() {
+		env.clear();
+	}
+
 }

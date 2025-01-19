@@ -51,7 +51,8 @@ public class App {
             new Toolbox.Tool("Floodfill", () -> mapGen.preFill(camera.getPx()+(int)camera.getCursorx(), camera.getPy()+(int)camera.getCursory()), getTileCursor()),    
             new Toolbox.Tool("PutObject", () -> env.addEnvObject(camera.getPx()+(float)camera.getCursorx(), camera.getPy()+(float)camera.getCursory(), camera.getPz()), getObjectCursor()),
             new Toolbox.Tool("RemoveObject", () -> env.removeInProximity(camera.getPx()+(float)camera.getCursorx(), camera.getPy()+(float)camera.getCursory()), getRemoveObjectCursor()),
-            new Toolbox.Tool("MiniMap", () -> {}, showMiniMap())
+            new Toolbox.Tool("MiniMap", () -> {}, showMiniMap()),
+            new Toolbox.Tool("ClearAllTiles", App::clearMap, getRemoveTileCursor())
         );
 
         while(true) {
@@ -147,7 +148,7 @@ public class App {
     static CursorDepiction getTileCursor() {
         return (cursorx, cursory, g) -> {
             g.drawImage(tilespriteloader.getSpriteFromName(mapGen.getSelectedTerrainType()), TILE_SIZE*(int)cursorx, TILE_SIZE*(int)cursory, null); 
-            g.setColor(new Color(0, 255, 0, 50));
+            g.setColor(new Color(0, 255, 0, 175));
             g.drawRect(TILE_SIZE*(int)cursorx, TILE_SIZE*(int)cursory, TILE_SIZE, TILE_SIZE);  
         };
     }
@@ -186,6 +187,11 @@ public class App {
             g.setColor(new Color(255, 0, 0, 255));
             g.drawRect(camera.getPx()+screensize/2, camera.getPy()+screensize/2, screensize/TILE_SIZE, screensize/TILE_SIZE);
         };
+    }
+
+    static void clearMap() {
+        mapGen.clearMap();
+        env.clear();
     }
 
 }

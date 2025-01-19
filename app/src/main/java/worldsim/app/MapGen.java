@@ -81,6 +81,9 @@ public class MapGen {
 				addNumber = 3;
 			}
 			if(numberOfAdjacent == 4 || numberOfAdjacent == 5) {
+				addNumber = 2;
+			}
+			if(numberOfAdjacent == 6) {
 				addNumber = 1;
 			}
 
@@ -119,6 +122,10 @@ public class MapGen {
 
 	public List<OpenMapSpace> getMapSpaceAsList() {
 		return new ArrayList(map.values());
+	}
+
+	public void clearMap() {
+		map.clear();
 	}
 
 	record Coordinate(int x, int y, int z){};//temporary representation of a coordinate, used to save x and y together
