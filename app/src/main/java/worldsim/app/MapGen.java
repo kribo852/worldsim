@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 
 import lombok.RequiredArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -67,24 +69,19 @@ public class MapGen {
 
 	public void preFill(int x, int y) {
 		LinkedList<Coordinate> positionQueue = new LinkedList<Coordinate>();
+		List<Coordinate> denoiseList = new ArrayList<>();
 
 		positionQueue.add(new Coordinate(x, y, 0));
 		for (int i = 0; !positionQueue.isEmpty(); i++) {
 			Coordinate get = positionQueue.pollFirst();
 
-			int numberOfAdjacent = calcAdjacent(get.x(), get.y());
+			int numberOfAdjacent = calcNonEmptyAdjacent(get.x(), get.y());
 			int addNumber = 0;
 			if(numberOfAdjacent == 1 || numberOfAdjacent == 2) {
 				addNumber = 2;
 			}
 			if(numberOfAdjacent == 3) {
 				addNumber = 3;
-			}
-			if(numberOfAdjacent == 4 || numberOfAdjacent == 5) {
-				addNumber = 2;
-			}
-			if(numberOfAdjacent == 6) {
-				addNumber = 1;
 			}
 
 			for (int k=0; k<addNumber; k++) {
@@ -103,17 +100,35 @@ public class MapGen {
 					}
 				}
 			}
+			denoiseList.addAll(getEmptyAdjacent(get.x(), get.y()));
 		}
+		denoise(denoiseList);
 	}
 
-	private int calcAdjacent(int x, int y) {
-		int rtn = 0;
+	private void denoise(List<Coordinate> possibleDenoisCoords) {
+		possibleDenoisCoords.stream().filter(coord -> {
+			Floodfill floodfill = new Floodfill(10);
+			List<Floodfill.Coordinate> toBeFilled = floodfill.floodFill(
+				coord.x(), coord.y(), (x, y) -> map.get(new Coordinate(x, y, 0)) == null);
+			    return toBeFilled.size() < 5;
+			}
+		).forEach(coord -> putOpenSpace(coord.x(), coord.y(), 0));
+	}
+
+	private int calcNonEmptyAdjacent(int x, int y) {
+		return (int)getAdjacent(x, y).stream().filter(coord -> map.get(coord) != null).count();
+	}
+
+	private List<Coordinate> getEmptyAdjacent(int x, int y) {
+		return getAdjacent(x, y).stream().filter(coord -> map.get(coord) == null).collect(Collectors.toList());
+	}
+
+	private List<Coordinate> getAdjacent(int x, int y) {
+		List<Coordinate> rtn = new ArrayList<>();
 		for (int i=-1; i<2; i++) {
 			for (int j=-1; j<2; j++) {
 				if(Math.abs(i) + Math.abs(j) == 1) {
-					if(map.get(new Coordinate(i + x, j + y, 0)) != null) {
-						rtn ++;
-					}
+					rtn.add(new Coordinate(i + x, j + y, 0));
 				}
 			}	
 		}
