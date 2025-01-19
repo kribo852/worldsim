@@ -52,7 +52,7 @@ public class App {
             new Toolbox.Tool("PutObject", () -> env.addEnvObject(camera.getPx()+(float)camera.getCursorx(), camera.getPy()+(float)camera.getCursory(), camera.getPz()), getObjectCursor()),
             new Toolbox.Tool("RemoveObject", () -> env.removeInProximity(camera.getPx()+(float)camera.getCursorx(), camera.getPy()+(float)camera.getCursory()), getRemoveObjectCursor()),
             new Toolbox.Tool("MiniMap", () -> {}, showMiniMap()),
-            new Toolbox.Tool("ClearAllTiles", App::clearMap, getRemoveTileCursor())
+            new Toolbox.Tool("ClearMap", App::clearMap, getRemoveTileCursor())
         );
 
         while(true) {
