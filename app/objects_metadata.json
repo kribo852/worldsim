@@ -51,9 +51,36 @@
 	{
 		"xcoordinate" : 40,
 		"ycoordinate" : 20,
-		"spritename" : "AUTUMN_TREE",
+		"spritename" : "LATE_AUTUMN_TREE",
+		"width" : 20,
+		"height" : 20
+	},
+	{
+		"xcoordinate" : 60,
+		"ycoordinate" : 20,
+		"spritename" : "EARLY_AUTUMN_TREE",
+		"width" : 20,
+		"height" : 20
+	},
+	{
+		"xcoordinate" : 100,
+		"ycoordinate" : 0,
+		"spritename" : "TELECOM_TOWER",
+		"width" : 20,
+		"height" : 60
+	},
+	{
+		"xcoordinate" : 0,
+		"ycoordinate" : 40,
+		"spritename" : "SKULL",
+		"width" : 20,
+		"height" : 20
+	},
+	{
+		"xcoordinate" : 20,
+		"ycoordinate" : 40,
+		"spritename" : "ALIEN_SKULL",
 		"width" : 20,
 		"height" : 20
 	}
-
 ]
